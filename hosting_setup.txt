@@ -1,0 +1,9 @@
+https://medium.com/@mas.autsakorn/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B9%89-firebase-hosting-%E0%B9%80%E0%B8%9A%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%95%E0%B9%89%E0%B8%99-step-by-step-338e662164c0
+
+sudo npm install -g firebase-tools
+firebase login
+mkdir <project-name>
+cd <project-name>
+firebase init
+firebase serve
+firebase deploy
