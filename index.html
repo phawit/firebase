@@ -1,141 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Temp&Humid</title>
-  <!-- update the version number as needed -->
-  <script src="js/firebase.js"></script>
-        
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    
+  <title>Firebase Basic Example</title>
+  <!-- including FusionCharts core package JS files -->
+  <script src="https://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+  <link rel="stylesheet" href="assets/css/main.css">
+
+  <!-- including Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+  <script src="assets/scripts/app.js"></script>
+  <script>
+    window.addEventListener("load", getData(genFunction));
+
+    function getData(callbackIN) {
+      var ref = firebase.database().ref("data");
+      ref.once('value').then(function (snapshot) {
+        callbackIN(snapshot.val())
+      });
+    }
+
+    function genFunction(data) {
+      var cdata = [];
+      var len = data.length;
+      for(var i=1; i<len; i++) {
+        cdata.push({
+          label: data[i]['label'],
+          value: data[i]['value']
+        });
+      }
+
+
+    var firebaseChart = new FusionCharts({
+        type: 'area2d',
+        renderAt: 'chart-container',
+        width: '650',
+        height: '400',
+        dataFormat: 'json',
+        dataSource: {
+            "chart": {
+                "caption": "Website Visitors Trend",
+                "subCaption": "Last 7 Days{br}ACME Inc.",
+                "subCaptionFontBold": "0",
+                "captionFontSize": "20",
+                "subCaptionFontSize": "17",
+                "captionPadding": "15",
+                "captionFontColor": "#8C8C8C",
+                "baseFontSize": "14",
+                "baseFont": "Barlow",
+                "canvasBgAlpha": "0",
+                "bgColor": "#FFFFFF",
+                "bgAlpha": "100",
+                "showBorder": "0",
+                "showCanvasBorder": "0",
+                "showPlotBorder": "0",
+                "showAlternateHGridColor": "0",
+                "usePlotGradientColor": "0",
+                "paletteColors": "#6AC1A5",
+                "showValues": "0",
+                "divLineAlpha": "5",
+                "showAxisLines": "1",
+                "drawAnchors": "0",
+                "xAxisLineColor": "#8C8C8C",
+                "xAxisLineThickness": "0.7",
+                "xAxisLineAlpha": "50",
+                "yAxisLineColor": "#8C8C8C",
+                "yAxisLineThickness": "0.7",
+                "yAxisLineAlpha": "50",
+                "baseFontColor": "#8C8C8C",
+                "toolTipBgColor": "#FA8D67",
+                "toolTipPadding": "10",
+                "toolTipColor": "#FFFFFF",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "0",
+                "drawCrossLine": "1",
+                "crossLineColor": "#8C8C8C",
+                "crossLineAlpha": "60",
+                "crossLineThickness": "0.7",
+                "alignCaptionWithCanvas": "1"
+            },
+            "data": cdata
+        }
+    });
+
+    firebaseChart.render();
+
+    }
+
+  </script>
 </head>
+
 <body>
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row">
-        <!-- Title -->
-        <span class="mdl-layout-title">Temp&Humid</span>
-        <!-- Add spacer, to align navigation to the right -->
-        <div class="mdl-layout-spacer"></div>
-        <!-- Navigation. We hide it in small screens. -->
-        <nav class="mdl-navigation mdl-layout--large-screen-only">
-        <a class="mdl-navigation__link" href="http://www.facebook.com/ANTDPU">ANT1 DPU on Facebook</a>
-        </nav>
-      </div>
-      </header>
-      <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">Title</span>
-        <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="http://www.facebook.com/ANTDPU">Dash Board</a>
-        </nav>
-  </div>
-
-  <main class="mdl-layout__content">
-      <div class="page-content">
-  
-      <!-- Your content goes here -->
-      <p id="contact-success" class="text-success lead"></p>
-      <p id="contact-error" class="text-danger lead"></p>
-      <div align="center" style="padding-top: 20px;">
-      <form id="contact-form" role="form" onsubmit="return sendData(this)">
-        <table class="mdl-data-table mdl-js-data-table">
-        <thead>
-          <tr>
-            <td>UNIT:</td>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" id="unit">
-                <label class="mdl-textfield__label" for="unit">Your Unit Name...</label>
-              </div>
-            </td>
-          </tr>
-          <tr>
-              <td>SSID:</td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="ssid">
-                  <label class="mdl-textfield__label" for="ssid">Your wifi ssid...</label>
-                </div>
-              </td>
-          </tr>
-          <tr>
-              <td>PASS:</td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="pass" id="pass">
-                  <label class="mdl-textfield__label" for="pass">Your wifi password...</label>
-                </div>
-              </td>
-          </tr>
-          <tr>
-              <td>LINE:</td>
-              <td>
-                <div class="mdl-textfield mdl-js-textfield">
-                  <input class="mdl-textfield__input" type="text" id="line" id="line">
-                  <label class="mdl-textfield__label" for="line">Your line token id...</label>
-                </div>
-              </td>
-          </tr>
-         
-          <tr>
-            <td>Message:</td>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield"> 
-                <textarea class="mdl-textfield__input" type="text" rows="4" id="message" id="message"></textarea>
-                <label class="mdl-textfield__label" for="message">Your Message...</label>
-              </div><br/>
-          
-              
-            </td>
-            
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-      </form>
-      </div>
-  
-      </div>
-      
-  </main>
-
-
-
-
-<!--
-<h1 id="head">Temp&Humid</h1>
-<textarea id="text" placeholder="enter here...."></textarea>
-<textarea id="text2" placeholder="enter here...."></textarea>
-<button id="button" onclick="myclick()" >Submit</button>
--->
-<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="button" onclick="myclick()" type="submit" >Submit Data</button>
-
-
-
-
-
-<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBQoEI21yl1vXJEgZbd6yjX47FVCcfJgtg",
-    authDomain: "fir-web-learn-6df68.firebaseapp.com",
-    databaseURL: "https://fir-web-learn-6df68.firebaseio.com",
-    projectId: "fir-web-learn-6df68",
-    storageBucket: "fir-web-learn-6df68.appspot.com",
-    messagingSenderId: "1067381195752"
-  };
-  firebase.initializeApp(config);
-</script>
-
-<script src="index.js"></script>
-
-
-
-
+  <div id="chart-container"><svg width="90px"  height="90px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-rolling" style="background: none;"><circle cx="50" cy="50" fill="none" ng-attr-stroke="{{config.color}}" ng-attr-stroke-width="{{config.width}}" ng-attr-r="{{config.radius}}" ng-attr-stroke-dasharray="{{config.dasharray}}" stroke="#6ac1a5" stroke-width="9" r="33" stroke-dasharray="155.50883635269477 53.83627878423159" transform="rotate(324 50 50)"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform></circle></svg></div>
 </body>
+
 </html>
